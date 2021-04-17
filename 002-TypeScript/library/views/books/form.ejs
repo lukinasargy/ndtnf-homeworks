@@ -1,0 +1,62 @@
+<form method="POST" class="mt-5" enctype="multipart/form-data">
+    <div class="form-group">
+        <label for="inputTitle">Заголовок</label>
+        <input type="text"
+               value="<%= books.title %>"
+               name="title"
+               class="form-control"
+               id="inputTitle">
+    </div>
+
+    <div class="form-group">
+        <label for="inputDesc">Файл книги</label>
+        <input type="file"
+               value="<%= books.fileBook %>"
+               name="fileBook"
+               class="form-control-file"
+               id="fileBook"
+               required
+               accept="application/pdf, text/plain, image/png, image/jpg, image/jpeg"
+               />
+    </div>
+
+    <div class="form-group">
+        <label for="inputDescription">Описание</label>
+        <textarea
+                rows="3"
+                name="description"
+                class="form-control"
+                id="inputDescription"
+        ><%= books.description %></textarea>
+    </div>
+
+    <div class="form-group">
+        <label for="inputAuthors">Авторы</label>
+        <textarea
+                rows="3"
+                name="authors"
+                class="form-control"
+                id="inputAuthors"
+        ><%= books.authors %></textarea>
+    </div>
+
+    <div class="custom-control custom-switch">
+        <input type="checkbox" class="custom-control-input" id="inputFavorite"  name="favorite" value=<%= true %> <%= books.favorite ? "checked" : "" %>>
+        <label class="custom-control-label" for="inputFavorite">В Избранных</label>
+    </div>
+
+    <div class="form-group">
+        <label for="inputDesc">Обложка</label>
+        <input type="file"
+               value="<%= books.fileCover %>"
+               name="fileCover"
+               class="form-control-file"
+               id="fileCover"
+               accept="image/png, image/jpg, image/jpeg"
+               />
+    </div>
+
+    <div class="form-group text-right ">
+        <button type="submit" class="btn btn-primary">Сохранить</button>
+    </div>
+</form>
