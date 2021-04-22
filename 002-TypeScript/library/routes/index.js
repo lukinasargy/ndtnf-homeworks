@@ -2,10 +2,13 @@ const express = require("express");
 const axios = require("axios");
 const router = express.Router();
 const { Book } = require("../models");
+const { BooksRepository } = require("../models/BooksRepository");
 const fileMiddleware = require("../middleware/file");
 
+const booksRepository = new BooksRepository();
+
 router.get("/", async (req, res) => {
-    const books = await Book.find();
+    const books = await booksRepository.getBooks();
 
     res.render("books/index", {
         title: "Books",
@@ -35,6 +38,7 @@ router.post(
             fileCover = "",
             fileBook = "",
         } = req.body;
+
         let fileName;
 
         if (req.files) {
@@ -45,18 +49,20 @@ router.post(
             return;
         }
 
-        const newBook = new Book(
-            {title,
+        const newBook = {
+            title,
             description,
             authors,
             favorite,
             fileCover,
             fileName,
-            fileBook,}
-        );
+            fileBook,
+        };
+
         try {
-            await newBook.save();
+            await booksRepository.createBook(newBook);
             res.redirect('/');
+
         } catch (e) {
             console.error(e);
         }
@@ -71,18 +77,18 @@ router.get("/view/:id", async (req, res) => {
         .then(() => {
             axios
                 .get(`http://counter:3001/counter/${id}`)
-                .then(
-                async(response) => {
+                .then(async (response) => {
                     let book;
-                    try { book = await Book.findById(id);
+                    try {
+                        book = await Book.findById(id);
                         res.render("books/view", {
                             title: "Books | view",
                             book: book,
                             views: response.data,
-                        });}
-                    catch (e) {
+                        });
+                    } catch (e) {
                         console.error(e);
-                        res.status(404).redirect('/404');
+                        res.status(404).redirect("/404");
                     }
                 })
                 .catch((err) => {
@@ -95,7 +101,6 @@ router.get("/view/:id", async (req, res) => {
 });
 
 router.get("/update/:id", async (req, res) => {
-
     const { id } = req.params;
     let book;
     try {
@@ -106,7 +111,7 @@ router.get("/update/:id", async (req, res) => {
         });
     } catch (e) {
         console.error(e);
-        res.status(404).redirect('/404');
+        res.status(404).redirect("/404");
     }
 });
 
@@ -149,9 +154,9 @@ router.post(
             });
         } catch (e) {
             console.error(e);
-            res.status(404).redirect('/404');
+            res.status(404).redirect("/404");
         }
-    
+
         res.redirect(`/view/${id}`);
     }
 );
@@ -160,10 +165,10 @@ router.post("/delete/:id", async (req, res) => {
     const { id } = req.params;
 
     try {
-        await Book.deleteOne({_id: id});
+        await Book.deleteOne({ _id: id });
     } catch (e) {
         console.error(e);
-        res.status(404).redirect('/404');
+        res.status(404).redirect("/404");
     }
 
     res.redirect(`/`);
@@ -172,7 +177,7 @@ router.post("/delete/:id", async (req, res) => {
 router.get("/:id/download", async (req, res) => {
     const { id } = req.params;
     try {
-        const book = await Book.findById(id).select('-__v');
+        const book = await Book.findById(id).select("-__v");
         const fileName = book.fileName;
         res.download(
             __dirname + `/../public/book/${fileName}`,
@@ -183,9 +188,9 @@ router.get("/:id/download", async (req, res) => {
                 }
             }
         );
-    } catch(e) {
+    } catch (e) {
         console.error(e);
-        res.status(404).redirect('/404');
+        res.status(404).redirect("/404");
     }
 });
 module.exports = router;
