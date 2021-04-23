@@ -20,10 +20,27 @@ export class BooksRepository {
             console.error(e);
         }
     }
-    getBook(id: BookId) {}
+    async getBook(id: BookId) {
+        return await Book.findById(id);
+    }
     async getBooks() {
         return await Book.find();
     }
-    updateBook(id: BookId) {}
-    deleteBook(id: BookId) {}
+    async updateBook(id: BookId, book: IBook) {
+        try {
+            await Book.findByIdAndUpdate(id, book);
+        } catch (e) {
+            console.error(e);
+        }
+    }
+    async deleteBook(id: BookId) {
+        try {
+            await Book.deleteOne({ _id: id });
+        } catch (e) {
+            console.error(e);
+        }
+    }
+    async getVersionBook (id:BookId) {
+        return await Book.findById(id).select("-__v");
+    }
 }

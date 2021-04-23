@@ -1,7 +1,6 @@
 const express = require("express");
 const axios = require("axios");
 const router = express.Router();
-const { Book } = require("../models");
 const { BooksRepository } = require("../models/BooksRepository");
 const fileMiddleware = require("../middleware/file");
 
@@ -80,7 +79,7 @@ router.get("/view/:id", async (req, res) => {
                 .then(async (response) => {
                     let book;
                     try {
-                        book = await Book.findById(id);
+                        book = await booksRepository.getBook(id);
                         res.render("books/view", {
                             title: "Books | view",
                             book: book,
@@ -104,7 +103,7 @@ router.get("/update/:id", async (req, res) => {
     const { id } = req.params;
     let book;
     try {
-        book = await Book.findById(id);
+        book = await booksRepository.getBook(id);
         res.render("books/update", {
             title: "Book | view",
             books: book,
@@ -130,6 +129,7 @@ router.post(
             fileCover,
             fileBook,
         } = req.body;
+
         let fileName;
 
         if (req.files) {
@@ -142,16 +142,18 @@ router.post(
 
         const { id } = req.params;
 
+        const updBook = {
+            title,
+            description,
+            authors,
+            favorite,
+            fileCover,
+            fileName,
+            fileBook,
+        }
+
         try {
-            await Book.findByIdAndUpdate(id, {
-                title,
-                description,
-                authors,
-                favorite,
-                fileCover,
-                fileName,
-                fileBook,
-            });
+            await booksRepository.updateBook(updBook);
         } catch (e) {
             console.error(e);
             res.status(404).redirect("/404");
@@ -165,7 +167,7 @@ router.post("/delete/:id", async (req, res) => {
     const { id } = req.params;
 
     try {
-        await Book.deleteOne({ _id: id });
+        await booksRepository.deleteBook(id);
     } catch (e) {
         console.error(e);
         res.status(404).redirect("/404");
@@ -177,7 +179,7 @@ router.post("/delete/:id", async (req, res) => {
 router.get("/:id/download", async (req, res) => {
     const { id } = req.params;
     try {
-        const book = await Book.findById(id).select("-__v");
+        const book = await booksRepository.getVersionBook(id);
         const fileName = book.fileName;
         res.download(
             __dirname + `/../public/book/${fileName}`,
