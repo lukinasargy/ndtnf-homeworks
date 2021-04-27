@@ -27,7 +27,6 @@ services:
       - 3001:3001
     environment:
       - PORT=3001
-    command: npm start
     volumes: 
       - ./counter:/011-mongo/counter
   library:
@@ -42,7 +41,7 @@ services:
       - DB_HOST=mongodb://mongodb:27017
     depends_on:
       - mongodb
-    command: npm start
+    
     volumes: 
       - ./library/public/book:/011-mongo/library/public/book
       - ./library/public/cover:/011-mongo/library/public/cover
