@@ -1,12 +1,16 @@
-const express = require("express");
-const axios = require("axios");
-const router = express.Router();
-const { BooksRepository } = require("../models/BooksRepository");
-const fileMiddleware = require("../middleware/file");
+import * as express from "express";
+import axios from "axios";
+import * as fileMiddleware from "../middleware/file";
+import "reflect-metadata";
+import { container } from "../inversify.config";
+import { BooksRepository } from "../services/BooksRepository";
 
-const booksRepository = new BooksRepository();
+const router = express.Router();
+
 
 router.get("/", async (req, res) => {
+    const booksRepository = container.get(BooksRepository);
+
     const books = await booksRepository.getBooks();
 
     res.render("books/index", {
@@ -29,6 +33,8 @@ router.post(
         { name: "fileCover", maxCount: 1 },
     ]),
     async (req, res) => {
+        const booksRepository = container.get(BooksRepository);
+
         const {
             title = "",
             description = "",
@@ -60,8 +66,7 @@ router.post(
 
         try {
             await booksRepository.createBook(newBook);
-            res.redirect('/');
-
+            res.redirect("/");
         } catch (e) {
             console.error(e);
         }
@@ -69,6 +74,8 @@ router.post(
 );
 
 router.get("/view/:id", async (req, res) => {
+    const booksRepository = container.get(BooksRepository);
+
     const { id } = req.params;
 
     axios
@@ -100,6 +107,8 @@ router.get("/view/:id", async (req, res) => {
 });
 
 router.get("/update/:id", async (req, res) => {
+    const booksRepository = container.get(BooksRepository);
+
     const { id } = req.params;
     let book;
     try {
@@ -121,6 +130,8 @@ router.post(
         { name: "fileCover", maxCount: 1 },
     ]),
     async (req, res) => {
+        const booksRepository = container.get(BooksRepository);
+
         const {
             title,
             description,
@@ -150,10 +161,10 @@ router.post(
             fileCover,
             fileName,
             fileBook,
-        }
+        };
 
         try {
-            await booksRepository.updateBook(updBook);
+            await booksRepository.updateBook(id, updBook);
         } catch (e) {
             console.error(e);
             res.status(404).redirect("/404");
@@ -164,6 +175,8 @@ router.post(
 );
 
 router.post("/delete/:id", async (req, res) => {
+    const booksRepository = container.get(BooksRepository);
+
     const { id } = req.params;
 
     try {
@@ -177,6 +190,8 @@ router.post("/delete/:id", async (req, res) => {
 });
 
 router.get("/:id/download", async (req, res) => {
+    const booksRepository = container.get(BooksRepository);
+
     const { id } = req.params;
     try {
         const book = await booksRepository.getVersionBook(id);
