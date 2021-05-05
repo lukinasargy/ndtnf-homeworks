@@ -1,12 +1,10 @@
 import * as express from "express";
 import axios from "axios";
 import * as fileMiddleware from "../middleware/file";
-import "reflect-metadata";
 import { container } from "../inversify.config";
 import { BooksRepository } from "../services/BooksRepository";
 
 const router = express.Router();
-
 
 router.get("/", async (req, res) => {
     const booksRepository = container.get(BooksRepository);
