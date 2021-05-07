@@ -2,11 +2,11 @@
   "name": "006-express",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "dist/app.ts ",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "tsc services/BooksRepository.ts routes/index.ts && node index.js",
-    "dev": "nodemon index.js"
+    "start": "node dist/app.js",
+    "dev": "nodemon  dist/app.js"
   },
   "repository": {
     "type": "git",

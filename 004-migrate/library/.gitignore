@@ -2,3 +2,5 @@
 /public
 server.log
 .env
+/dist
+tsconfig.tsbuildinfo
