@@ -1,6 +1,6 @@
 FROM node:alpine
 
-WORKDIR /009-docker/counter
+WORKDIR /004-migrate/counter
 
 COPY package.json ./
 

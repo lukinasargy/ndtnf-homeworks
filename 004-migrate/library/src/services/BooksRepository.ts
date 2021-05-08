@@ -1,4 +1,4 @@
-const { Book } = require("../models");
+import { Book } from "../models/Books";
 interface IBook {
     title: string;
     description: string;

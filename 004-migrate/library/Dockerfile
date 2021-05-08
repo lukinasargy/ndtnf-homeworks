@@ -1,6 +1,6 @@
 FROM node:alpine
 
-WORKDIR /009-docker/library
+WORKDIR /004-migrate/library
 
 COPY package.json ./
 

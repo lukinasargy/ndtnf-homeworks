@@ -1,14 +1,14 @@
-const express = require('express');
-const bodyParser = require("body-parser");
-const cors = require('cors');
-const mongoose = require('mongoose');
+import express from 'express';
+import bodyParser from "body-parser";
+import cors from 'cors';
+import mongoose from 'mongoose';
 
-const loggerMiddleware = require('./middleware/logger');
-const errorMiddleware = require('./middleware/error');
+import {loggerMiddleware} from './middleware/logger';
+import {errorMiddleware} from './middleware/error';
 
-const indexRouter = require('./routes/index');
-const booksApiRouter = require('./routes/api/books');
-const userRouter = require('./routes/user');
+import {indexRouter} from './routes/index';
+import {booksApiRouter} from './routes/api/books';
+import {userRouter} from './routes/user';
 
 const app = express();
 
@@ -31,9 +31,11 @@ const UserDB = process.env.DB_USERNAME || 'root';
 const PasswordDB = process.env.DB_PASSWORD || 'qwerty12345';
 const NameDB = process.env.DB_NAME || 'books'
 const HostDb = process.env.DB_HOST || 'mongodb://localhost:27017/'
+const mongodb = `mongodb://${UserDB}:${PasswordDB}@${HostDb}/${NameDB}`;
 
 async function start () {
     try {
+        // await mongoose.connect(mongodb)
         await mongoose.connect(HostDb, {
             user: UserDB,
             pass: PasswordDB,

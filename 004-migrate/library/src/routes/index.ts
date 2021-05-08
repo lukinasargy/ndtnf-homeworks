@@ -1,12 +1,12 @@
-import * as express from "express";
+import express from "express";
 import axios from "axios";
-import * as fileMiddleware from "../middleware/file";
+import {fileMiddleware} from "../middleware/file";
 import { container } from "../inversify.config";
 import { BooksRepository } from "../services/BooksRepository";
 
 const router = express.Router();
 
-router.get("/", async (req, res) => {
+router.get("/", async (req: any, res: any) => {
     const booksRepository = container.get(BooksRepository);
 
     const books = await booksRepository.getBooks();
@@ -17,7 +17,7 @@ router.get("/", async (req, res) => {
     });
 });
 
-router.get("/create", (req, res) => {
+router.get("/create", (req: any, res: any) => {
     res.render("books/create", {
         title: "Books | create",
         books: {},
@@ -30,7 +30,7 @@ router.post(
         { name: "fileBook", maxCount: 1 },
         { name: "fileCover", maxCount: 1 },
     ]),
-    async (req, res) => {
+    async (req: any, res: any) => {
         const booksRepository = container.get(BooksRepository);
 
         const {
@@ -71,7 +71,7 @@ router.post(
     }
 );
 
-router.get("/view/:id", async (req, res) => {
+router.get("/view/:id", async (req: any, res: any) => {
     const booksRepository = container.get(BooksRepository);
 
     const { id } = req.params;
@@ -104,7 +104,7 @@ router.get("/view/:id", async (req, res) => {
         });
 });
 
-router.get("/update/:id", async (req, res) => {
+router.get("/update/:id", async (req: any, res: any) => {
     const booksRepository = container.get(BooksRepository);
 
     const { id } = req.params;
@@ -127,7 +127,7 @@ router.post(
         { name: "fileBook", maxCount: 1 },
         { name: "fileCover", maxCount: 1 },
     ]),
-    async (req, res) => {
+    async (req: any, res: any) => {
         const booksRepository = container.get(BooksRepository);
 
         const {
@@ -172,7 +172,7 @@ router.post(
     }
 );
 
-router.post("/delete/:id", async (req, res) => {
+router.post("/delete/:id", async (req: any, res: any) => {
     const booksRepository = container.get(BooksRepository);
 
     const { id } = req.params;
@@ -187,7 +187,7 @@ router.post("/delete/:id", async (req, res) => {
     res.redirect(`/`);
 });
 
-router.get("/:id/download", async (req, res) => {
+router.get("/:id/download", async (req: any, res: any) => {
     const booksRepository = container.get(BooksRepository);
 
     const { id } = req.params;
@@ -197,7 +197,7 @@ router.get("/:id/download", async (req, res) => {
         res.download(
             __dirname + `/../public/book/${fileName}`,
             `${fileName.split("_filename_").pop()}`,
-            (err) => {
+            (err: any) => {
                 if (err) {
                     res.status(404).redirect("/404");
                 }
@@ -208,4 +208,4 @@ router.get("/:id/download", async (req, res) => {
         res.status(404).redirect("/404");
     }
 });
-module.exports = router;
+export const indexRouter = router;
