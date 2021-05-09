@@ -120,7 +120,7 @@ router.get("/:id/download", async (req: any, res: any) => {
         const book = await Book.findById(id).select("-__v");
         const fileName = book.fileName;
         res.download(
-            __dirname + `/../public/book/${fileName}`,
+            __dirname + `/../../public/book/${fileName}`,
             `${fileName.split("_filename_").pop()}`,
             (err:any) => {
                 if (err) {
