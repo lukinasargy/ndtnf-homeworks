@@ -1,47 +1,46 @@
 import { Injectable } from '@nestjs/common';
-import { Book } from 'src/interfaces/book.interface';
 import * as uidGenerator from 'node-unique-id-generator';
+import { InjectConnection, InjectModel } from '@nestjs/mongoose';
+import { Book, BookDocument } from 'src/schemas/book.schema';
+import { Connection, Model } from 'mongoose';
 
 type BookId = string;
 
 @Injectable()
 export class BooksService {
-  private readonly books: (Book & { id: string })[] = [];
+  constructor(
+    @InjectModel(Book.name) private BookModel: Model<BookDocument>,
+    @InjectConnection() private connection: Connection,
+  ) {}
 
   async createBook(book: Book) {
-    const id = uidGenerator.generateUniqueId();
-    const newBook = { id, ...book };
-    this.books.push(newBook);
-    return newBook;
+    const newBook = new this.BookModel(book);
+    try {
+      await newBook.save();
+      return newBook;
+    } catch (error) {
+      console.error(error);
+    }
   }
   async getBook(id: BookId) {
-    return this.books.find((book) => book.id === id);
+    return this.BookModel.findById(id);
   }
   async getBooks() {
-    return this.books;
+    return this.BookModel.find();
   }
   async updateBook(id: BookId, book: Book) {
-    const idx = this.books.findIndex((el) => el.id === id);
-
-    if (idx !== -1) {
-      this.books[idx] = {
-        ...this.books[idx],
-        ...book,
-      };
-    } else {
-      console.error('id not found');
+    try {
+      return await this.BookModel.findByIdAndUpdate(id, book);
+      // return this.BookModel.findById(id);
+    } catch (error) {
+      console.error(error);
     }
-    return this.books[idx];
   }
   async deleteBook(id: BookId) {
-    const idx = this.books.findIndex((el) => el.id === id);
-
-    if (idx !== -1) {
-      this.books.splice(idx, 1);
-      return true;
-    } else {
-      console.error('id not found');
-      return false;
+    try {
+      return await !!this.BookModel.findByIdAndDelete(id);
+    } catch (error) {
+      console.error(error);
     }
   }
 }

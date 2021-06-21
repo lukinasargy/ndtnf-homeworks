@@ -9,7 +9,7 @@ import {
 } from '@nestjs/common';
 import { CreateBookDto } from 'src/dto/create-book.dto';
 import { UpdateBookDto } from 'src/dto/update-book.dto';
-import { Book } from 'src/interfaces/book.interface';
+import { Book } from 'src/schemas/book.schema';
 import { BooksService } from 'src/services/books.service';
 
 @Controller('books')
