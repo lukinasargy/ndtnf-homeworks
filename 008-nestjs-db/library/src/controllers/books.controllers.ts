@@ -16,16 +16,16 @@ import { BooksService } from 'src/services/books.service';
 export class BooksController {
   constructor(private booksService: BooksService) {}
 
-  @Post() async create(@Body() createBookDto: CreateBookDto) {
+  @Post() public create(@Body() createBookDto: CreateBookDto) {
     this.booksService.createBook(createBookDto);
   }
 
   @Get(':id')
-  async getBook(@Param('id') id: string): Promise<Book> {
+  public getBook(@Param('id') id: string): Promise<Book> {
     return this.booksService.getBook(id);
   }
 
-  @Get() async getBooks(): Promise<Book[]> {
+  @Get() public getBooks(): Promise<Book[]> {
     return this.booksService.getBooks();
   }
 
