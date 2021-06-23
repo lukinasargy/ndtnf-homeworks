@@ -9,9 +9,12 @@ import {
 } from '@nestjs/common';
 import { CreateBookDto } from 'src/dto/create-book.dto';
 import { UpdateBookDto } from 'src/dto/update-book.dto';
-import { Book } from 'src/schemas/book.schema';
+import { Book, BookDocument } from 'src/schemas/book.schema';
 import { BooksService } from 'src/services/books.service';
 
+type IParamId = {
+  id: string;
+};
 @Controller('books')
 export class BooksController {
   constructor(private booksService: BooksService) {}
@@ -30,12 +33,12 @@ export class BooksController {
   }
 
   @Put(':id')
-  update(@Param('id') id: string, @Body() updateBookDto: UpdateBookDto) {
+  async update(@Param('id') id: string, @Body() updateBookDto: UpdateBookDto) {
     return this.booksService.updateBook(id, updateBookDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  async delete(@Param() { id }: IParamId): Promise<boolean> {
     return this.booksService.deleteBook(id);
   }
 }

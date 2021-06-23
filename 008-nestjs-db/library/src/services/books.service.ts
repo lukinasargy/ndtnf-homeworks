@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import * as uidGenerator from 'node-unique-id-generator';
 import { InjectConnection, InjectModel } from '@nestjs/mongoose';
 import { Book, BookDocument } from 'src/schemas/book.schema';
 import { Connection, Model } from 'mongoose';
+import { CreateBookDto } from 'src/dto/create-book.dto';
+import { UpdateBookDto } from 'src/dto/update-book.dto';
 
 type BookId = string;
 
@@ -13,7 +14,7 @@ export class BooksService {
     @InjectConnection() private connection: Connection,
   ) {}
 
-  public createBook(book: Book) {
+  public createBook(book: CreateBookDto) {
     const newBook = new this.BookModel(book);
     return newBook.save();
   }
@@ -23,10 +24,10 @@ export class BooksService {
   public getBooks() {
     return this.BookModel.find().exec();
   }
-  public updateBook(id: BookId, book: Book) {
-    return this.BookModel.findByIdAndUpdate(id, book).exec();
+  async updateBook(id: BookId, book: UpdateBookDto) {
+    return await this.BookModel.findByIdAndUpdate(id, book).exec();
   }
-  public deleteBook(id: BookId) {
-    return !!this.BookModel.findByIdAndDelete(id);
+  async deleteBook(id: BookId): Promise<boolean> {
+    return !!(await this.BookModel.findByIdAndDelete(id));
   }
 }
