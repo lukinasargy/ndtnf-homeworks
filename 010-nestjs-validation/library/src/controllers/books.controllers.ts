@@ -7,9 +7,10 @@ import {
   Post,
   Put,
 } from '@nestjs/common';
+import { ParseIdPipe } from 'src/common/pipes/parse-id.pipe';
 import { CreateBookDto } from 'src/dto/create-book.dto';
 import { UpdateBookDto } from 'src/dto/update-book.dto';
-import { Book, BookDocument } from 'src/schemas/book.schema';
+import { Book } from 'src/schemas/book.schema';
 import { BooksService } from 'src/services/books.service';
 
 type IParamId = {
@@ -24,7 +25,7 @@ export class BooksController {
   }
 
   @Get(':id')
-  public getBook(@Param('id') id: string): Promise<Book> {
+  public getBook(@Param('id', new ParseIdPipe()) id: string): Promise<Book> {
     return this.booksService.getBook(id);
   }
 

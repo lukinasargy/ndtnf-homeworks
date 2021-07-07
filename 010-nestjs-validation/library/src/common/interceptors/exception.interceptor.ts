@@ -3,6 +3,7 @@ import {
   Injectable,
   NestInterceptor,
   ExecutionContext,
+  NotFoundException,
 } from '@nestjs/common';
 import { Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
@@ -16,6 +17,9 @@ export class ExceptionInterceptor implements NestInterceptor {
       map((data) => {
         console.log(`\nExecution time: ${Date.now() - now}ms`);
         console.log('\nRequest was successful!');
+        if (data === null) {
+          throw new NotFoundException('not found');
+        }
         return {
           status: 'success',
           data: data, // данные из контроллера
