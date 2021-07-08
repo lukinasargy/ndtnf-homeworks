@@ -6,7 +6,10 @@ import {
   Param,
   Post,
   Put,
+  UsePipes,
 } from '@nestjs/common';
+import { createBookSchema } from 'src/common/joi/create-book.schema';
+import { JoiValidationPipe } from 'src/common/pipes/joi-validation.pipe';
 import { ParseIdPipe } from 'src/common/pipes/parse-id.pipe';
 import { CreateBookDto } from 'src/dto/create-book.dto';
 import { UpdateBookDto } from 'src/dto/update-book.dto';
@@ -20,7 +23,9 @@ type IParamId = {
 export class BooksController {
   constructor(private booksService: BooksService) {}
 
-  @Post() public create(@Body() createBookDto: CreateBookDto) {
+  @Post()
+  @UsePipes(new JoiValidationPipe(createBookSchema))
+  public create(@Body() createBookDto: CreateBookDto) {
     this.booksService.createBook(createBookDto);
   }
 
