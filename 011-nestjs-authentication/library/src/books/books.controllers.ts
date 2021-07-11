@@ -11,10 +11,10 @@ import {
 import { createBookSchema } from 'src/common/joi/create-book.schema';
 import { JoiValidationPipe } from 'src/common/pipes/joi-validation.pipe';
 import { ParseIdPipe } from 'src/common/pipes/parse-id.pipe';
-import { CreateBookDto } from 'src/dto/create-book.dto';
-import { UpdateBookDto } from 'src/dto/update-book.dto';
-import { Book } from 'src/schemas/book.schema';
-import { BooksService } from 'src/services/books.service';
+import { CreateBookDto } from './dto/create-book.dto';
+import { UpdateBookDto } from './dto/update-book.dto';
+import { Book } from './book.schema';
+import { BooksService } from './books.service';
 
 type IParamId = {
   id: string;

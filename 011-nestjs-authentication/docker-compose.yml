@@ -15,6 +15,8 @@ services:
       - PORT=3000
       - DB_NAME=${DB_NAME:-books_database}
       - DB_HOST=mongodb://mongodb:27017
+    env_file: 
+      - .env
     depends_on:
       - mongodb
     command: npm start
