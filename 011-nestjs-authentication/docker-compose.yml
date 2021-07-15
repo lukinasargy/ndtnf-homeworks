@@ -11,10 +11,6 @@ services:
     build: ./library
     ports:
       - 3000:3000
-    environment:
-      - PORT=3000
-      - DB_NAME=${DB_NAME:-books_database}
-      - DB_HOST=mongodb://mongodb:27017
     env_file: 
       - .env
     depends_on:
