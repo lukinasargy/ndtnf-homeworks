@@ -10,8 +10,7 @@ type BookId = string;
 @Injectable()
 export class BooksService {
   constructor(
-    @InjectModel(Book.name) private BookModel: Model<BookDocument>,
-    @InjectConnection() private connection: Connection,
+    @InjectModel(Book.name) private BookModel: Model<BookDocument>
   ) {}
 
   public createBook(book: CreateBookDto) {

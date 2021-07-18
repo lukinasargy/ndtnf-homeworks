@@ -1,7 +1,9 @@
 import { AuthService } from './auth/auth.service';
-import { Controller, Get, Request, Post, UseGuards } from '@nestjs/common';
+import { Controller, Get, Request, Post, UseGuards, Body, UsePipes } from '@nestjs/common';
 import { JwtAuthGuard } from './common/guards/jwt-auth.guard';
 import { AppService } from './app.service';
+import { JoiValidationPipe } from './common/pipes/joi-validation.pipe';
+import { createUserSchema } from './common/joi/create-user.schema';
 
 @Controller()
 export class AppController {
@@ -14,13 +16,19 @@ export class AppController {
     return this.appService.getHello();
   }
 
-  @Post('api/users/signin')
-  async login(@Request() req) {
-    return this.authService.login(req.user);
+  @Post('api/users/signUp')
+  @UsePipes(new JoiValidationPipe(createUserSchema))
+  async signUp(@Body() user) {
+    return this.authService.signUp(user);
+  }
+
+  @Post('api/users/signIn')
+  async signIn(@Body() user) {
+    return this.authService.signIn(user);
   }
 
   @UseGuards(JwtAuthGuard)
-  @Get('profile')
+  @Get('api/users/profile')
   getProfile(@Request() req) {
     return req.user;
   }
