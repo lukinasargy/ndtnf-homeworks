@@ -9,22 +9,11 @@ import { createUserSchema } from './common/joi/create-user.schema';
 export class AppController {
   constructor(
     private readonly appService: AppService,
-    private authService: AuthService,
   ) {}
+
   @Get()
   getHello(): string {
     return this.appService.getHello();
-  }
-
-  @Post('api/users/signUp')
-  @UsePipes(new JoiValidationPipe(createUserSchema))
-  async signUp(@Body() user) {
-    return this.authService.signUp(user);
-  }
-
-  @Post('api/users/signIn')
-  async signIn(@Body() user) {
-    return this.authService.signIn(user);
   }
 
   @UseGuards(JwtAuthGuard)

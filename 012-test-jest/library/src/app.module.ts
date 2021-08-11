@@ -9,7 +9,7 @@ import { BookModule } from './books/book.module';
 
 @Module({
   imports: [MongooseModule.forRoot('mongodb://mongodb:27017/books_database'), BookModule, AuthModule],
-  controllers: [AppController ],
+  controllers: [AppController],
   providers: [AppService],
 })
 
