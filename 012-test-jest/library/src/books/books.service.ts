@@ -13,9 +13,9 @@ export class BooksService {
     @InjectModel(Book.name) private BookModel: Model<BookDocument>
   ) {}
 
-  public createBook(book: CreateBookDto) {
+  public async createBook(book: CreateBookDto) {
     const newBook = new this.BookModel(book);
-    return newBook.save();
+    return await newBook.save();
   }
   public getBook(id: BookId) {
     return this.BookModel.findById(id).exec();

@@ -22,10 +22,7 @@ describe('BooksController', () => {
 
   const bookModel = mongoose.model<BookDocument>('bookModel', BookSchema);
 
-  const mockBooksService = {
-    getBooks: () => [new bookModel(book)],
-    createBook: () => true
-  };
+  const mockBooksService = {};
 
   beforeEach(async () => {
     const moduleRef = await Test.createTestingModule({
@@ -51,12 +48,35 @@ describe('BooksController', () => {
     });
   });
 
-  // describe('createBook', () => {
-  //   it('should create book', async () => {
-  //     const result = new bookModel(book);
+  describe('getBook', () => {
+    it('should return book', async () => {
+      const result = new bookModel(book);
+      jest.spyOn(booksService, 'getBook').mockResolvedValue(result);
+      expect(await booksController.getBook(result._id)).toBe(result);
+    });
+  });
 
-  //     jest.spyOn(booksService, 'createBook').mockResolvedValue(result);
-  //     expect(await booksController.create(book)).toBe(true);
-  //   });
-  // });
+  describe('deleteBook', () => {
+    it('should delete book', async () => {
+      const result = new bookModel(book);
+      jest.spyOn(booksService, 'deleteBook').mockResolvedValue(true);
+      expect(await booksController.delete(result._id)).toBe(true);
+    });
+  });
+
+  describe('updateBook', () => {
+    it('should update book', async () => {
+      const result = new bookModel(book);
+      jest.spyOn(booksService, 'updateBook').mockResolvedValue(result);
+      expect(await booksController.update(result._id, book)).toBe(result);
+    });
+  });
+
+  describe('createBook', () => {
+    it('should create book', async () => {
+      const result = new bookModel(book);
+      jest.spyOn(booksService, 'createBook').mockResolvedValue(result);
+      expect(await booksController.create(book)).toBe(result);
+    });
+  });
 });
